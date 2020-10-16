@@ -1,0 +1,12 @@
+{% extends "checkout/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<h1>Edit Item</h1>
+<form action="{% url 'edit_item' item_id %}" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="hidden" name="item_id" value="{{ item_id }}">
+    <button type="submit" class="btn btn-primary save_button mt-2">Save</button>
+</form>
+{% endblock %}

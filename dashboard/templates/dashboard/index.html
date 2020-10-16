@@ -1,0 +1,33 @@
+{% extends "checkout/layout.html" %}
+
+{% block body %}
+
+    Pick a date:
+    <input type="date" id="date" name="date" value="{{ today }}">
+    <p>
+    What bar colors mean:
+    <br>
+    <span style="color: green">Green: The date you chose.</span>
+    <br>
+    <span style="color: red">Red: The highest value.</span>
+    <br>
+    If there is no green bar then the date you chose has the highest value.
+    </p>
+    <img src="{{ images.month_img }}" class="img-fluid mt-2" id="month_img">
+    <img src="{{ images.year_img }}" class="img-fluid mb-2" id="year_img">
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        let date = document.querySelector("#date");
+        date.onchange = function() {
+            fetch(`/dashboard/get_data?date=${date.value}`)
+            .then(response => response.json())
+            .then(result => {
+                document.querySelector("#month_img").src = result["month_img"];
+                document.querySelector("#year_img").src = result["year_img"];
+            })
+        }
+    </script>
+{% endblock script %}

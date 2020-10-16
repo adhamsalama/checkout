@@ -1,0 +1,20 @@
+{% extends 'checkout/layout.html' %}
+
+{% block body %}
+
+<a href="{% url 'payment:add' %}"><h2>Add</h2></a>
+{% for payment in payments %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <h5 class="card-title">${{ payment.value }}</h5>
+        <p class="card-text">
+        Source: {{ payment.source }}
+        <br>
+        Date: {{ payment.date }}
+        </p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+{% endfor %}
+
+{% endblock body %}

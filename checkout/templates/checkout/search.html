@@ -1,0 +1,15 @@
+{% extends "checkout/layout.html" %}
+
+{% block body %}
+
+<form action="{% url 'checkout:search' %}" method="GET">
+    {% csrf_token %}
+    <input type="input" class="form-control" name="q">
+
+</form>
+
+<div>
+    {{ results }}
+</div>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "checkout/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="jumbotron jumbotron-fluid text-center">
+        <div class="container">
+          <h1 class="display-4">{{ request.user.username }}</h1>
+          <p class="lead">Email: {{ request.user.email }}
+          <br>
+          Created on: {{ request.user.date_joined }}
+          <br>
+          Balance: $<span id="balance">{{ request.user.balance }}</span>
+          <br>
+          <button type="submit" id="update" class="btn btn-primary">Update</button>
+          <br>
+          (Doesn't affect payments)
+          <br>
+          Items: {{ request.user.items.count }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    document.querySelector("#update").onclick = () => {
+        let new_balance = prompt("Enter new balance");
+        if (new_balance != null) {
+          new_balance = parseFloat(new_balance);
+          if (isNaN(new_balance))
+            alert("Invalid number");
+          else {
+            console.log(new_balance);
+            const request = new Request("/update_balance", 
+              {headers: {'X-CSRFToken': getCookie("csrftoken")}});
+            fetch(request, {
+              method: "POST",
+              body: JSON.stringify({
+                    new_balance: new_balance
+                })
+              }
+            )
+            .then(response => response.json())
+            .then(result => {
+              console.log(result);
+              document.querySelector("#balance").textContent = new_balance;
+            });
+            
+
+          }
+        }
+      }
+  </script>
+{% endblock  %}

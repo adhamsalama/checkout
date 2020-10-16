@@ -1,0 +1,7 @@
+{% load crispy_forms_tags %}
+
+<div class="m-4 p-4">
+    {{ form|crispy }}
+    <input type="hidden" name="item_id" value="{{ item_id }}">
+    <button type="submit" class="btn btn-primary mt-2">Save</button>
+</div>

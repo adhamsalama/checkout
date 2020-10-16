@@ -1,0 +1,11 @@
+{% extends "checkout/layout.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block body %}
+<h1>Create New Item</h1>
+<form action="{% url 'checkout:create_item' %}" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary mt-2 mb-2">Create</button>
+{% endblock  %}

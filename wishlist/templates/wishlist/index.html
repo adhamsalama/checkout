@@ -1,0 +1,59 @@
+{% extends 'checkout/layout.html' %}
+{% load static %}
+
+{% block body %}
+<button type="submit" class="btn btn-primary" id="add_wishlist">Add To Wishlist</button>
+
+<div id="form" class="container"></div>
+<div id="items" class="mt-2 mb-2">
+    {% for item in items %}
+        <div class="card mt-2 mb-2 item_div" id="{{ item.id }}">
+          <div class="card-body">
+            Name: {{ item.name }}
+            <br>
+            Price: ${{ item.price }}
+            <br>
+            Date: {{ item.date }}
+            <br>
+            <a href="{{ item.link }}" target="_blank">Link</a>
+            <br>
+            <button type="submit" class="btn btn-danger delete_wishlist_button">Delete</button>
+          </div>
+        </div>
+    {% endfor %}
+</div>
+{% if page_obj %}
+    <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+    {% endif %}
+    {% for num in paginator.page_range %}
+        {% if num == page_obj.number %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Next</a></li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+    {% endif %}
+  </ul>
+    </nav>
+{% else %}
+    <h1>No items.</h1>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'wishlist/addwishlist.js' %}"></script>
+    <script src="{% static 'wishlist/deletewishlist.js' %}"></script>
+{% endblock script %}

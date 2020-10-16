@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Checkout{% endblock %}</title>
+        <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        -->
+        <link href="{% static 'checkout/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'checkout/darkly.css' %}" rel="stylesheet">
+        <link rel="shortcut icon" type="image/png" href="{% static 'checkout/logo.png' %}"/>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 sticky-top">
+            <a class="navbar-brand" href="{% url 'checkout:index' %}"><img style="height: 30px; width: 30px" src="{% static 'checkout/logo.png' %}">Checkout</a>
+          
+            <div class="collapse navbar-collapse">
+              <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'payment:index' %}">Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'wishlist:index' %}">Wishlist</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'dashboard:index' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'checkout:profile' %}"><strong>{{ user.username }}</strong></a>
+                    </li>
+                {% endif %}
+            
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'checkout:logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'checkout:login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'checkout:register' %}">Register</a>
+                    </li>
+                {% endif %}
+              </ul>
+              <form action="{% url 'checkout:search' %}" method="GET" class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+          </nav>
+        
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            <p>{{ message }}</p>
+                        </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% block extra %} {% endblock %}
+        <div class="body container">
+            {% block body %}
+            {% endblock %}
+        </div>
+        <script src="{% static 'checkout/edit_item.js' %}"></script>
+        <script src="{% static 'checkout/delete_item.js' %}"></script>
+        {% block script %}
+        {% endblock  %}
+        
+    </body>
+</html>
