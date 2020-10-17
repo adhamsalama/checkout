@@ -7,14 +7,11 @@ from .forms import PaymentForm
 # Create your views here.
 
 def index(request):
-    payments = Payment.objects.filter(user=request.user)
-    return render(request, "payment/index.html", {"payments": payments})
+    payments = Payment.objects.filter(user=request.user).order_by("-date", "-id")
+    return render(request, "payment/index.html", {"payments": payments, "form": PaymentForm()})
 
 def add(request):
-    form = PaymentForm()
-    if request.method == "GET":
-        return render(request, "payment/add.html", {"form": form})
-    else:
+    if request.method == "POST":
         form = PaymentForm(request.POST)
         if form.is_valid():
             payment = Payment(user=request.user,
