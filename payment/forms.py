@@ -6,3 +6,5 @@ class PaymentForm(ModelForm):
         model = Payment
         fields = '__all__'
         exclude = ('user', )
+
+    field_order = ["value", "source", "date"]
