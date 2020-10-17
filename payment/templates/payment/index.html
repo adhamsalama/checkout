@@ -1,12 +1,18 @@
 {% extends 'checkout/layout.html' %}
+{% load crispy_forms_tags %}
 
 {% block body %}
 
-<a href="{% url 'payment:add' %}"><h2>Add</h2></a>
+<form action="{% url 'payment:add' %}" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary mt-2 mb-2">Add</button>
+</form>
+
 {% for payment in payments %}
     <div class="card mb-2">
       <div class="card-body">
-        <h5 class="card-title">${{ payment.value }}</h5>
+        <h2 class="card-title">${{ payment.value }}</h2>
         <p class="card-text">
         Source: {{ payment.source }}
         <br>
