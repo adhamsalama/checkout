@@ -16,6 +16,7 @@ from django.db.models import Q, Sum
 
 # Create your views here.
 
+@login_required
 def index(request):
     if not request.user.is_authenticated:
         return render(request, "checkout/login.html")
@@ -31,7 +32,7 @@ def index(request):
                 "items_sum": items.aggregate(Sum("price"))["price__sum"] if items else 0,
                 "form": ItemForm()})
 
-
+@login_required
 def create_item(request):
     if request.method == "GET":
         form = ItemForm()
@@ -57,6 +58,7 @@ def create_item(request):
         #print(form.cleaned_data)
         return JsonResponse({"message": "Error"})
 
+@login_required
 def edit_item(request, item_id):
     if request.method == "GET":
         try:
@@ -85,7 +87,7 @@ def edit_item(request, item_id):
         request.user.save()
         return JsonResponse({"message": "Item updated"}, status=201)
     
-
+@login_required
 def delete_item(request):
     item_id = json.loads(request.body)["item_id"]
     try:
@@ -97,16 +99,18 @@ def delete_item(request):
     except:
         return JsonResponse({"message": "Error"})
 
+@login_required
 def update_balance(request):
     new_balance = json.loads(request.body)["new_balance"]
     request.user.balance = new_balance
     request.user.save()
     return JsonResponse({"message": "Balance updated."}, status=201)
 
+@login_required
 def profile(request):
     return render(request, "checkout/profile.html")
 
-
+@login_required
 def search(request):
     q = request.GET.get("q", None)
     if q is None:
@@ -129,7 +133,7 @@ def search(request):
                 "page_obj": items_paginator["page_obj"],
                 "items": items_paginator["items"]})
 
-    
+@login_required
 def category(request, name):
     try:
         cat = Category.objects.get(name=name.lower())
@@ -146,6 +150,19 @@ def category(request, name):
                 "items_count": request.user.items.count(),
                 "items_sum": request.user.items.aggregate(Sum("price"))["price__sum"] if items else 0})
 
+@login_required
+def change_password(request):
+    old_password = request.POST["old_password"]
+    new_password = request.POST["new_password"]
+    if request.user.check_password(old_password):
+        request.user.set_password(new_password)
+        request.user.save()
+        login(request, request.user)
+        messages.success(request, "Password updated successfully.")
+        #return render(request, "checkout/profile.html")
+        return HttpResponseRedirect(reverse("checkout:profile"))
+    else:
+        return error(request, "Wrong password. Please try again.")
 def login_view(request):
     if request.method == "POST":
 
@@ -159,7 +176,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("checkout:index"))
         else:
-            return render(request, "network/login.html", {
+            return render(request, "checkout/login.html", {
                 "message": "Invalid username and/or password."
             })
     else:

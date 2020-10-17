@@ -17,6 +17,15 @@
           <br>
           Items: {{ request.user.items.count }}
         </div>
+        <form action="{% url 'checkout:change_password' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Old password</label>
+            <input type="password" class="form-control" style="width: 25%; margin: auto" name="old_password">
+            <label>New password</label>
+            <input type="password" class="form-control" style="width: 25%; margin: auto" name="new_password">
+          </div>
+          <button class="btn btn-primary">Change</button>
     </div>
 {% endblock %}
 
