@@ -26,3 +26,7 @@ textarea {
   padding: 1em;
   text-align: center;
 }
+
+.card-text {
+    font-size: larger !important;
+}
