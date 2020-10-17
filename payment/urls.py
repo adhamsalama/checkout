@@ -6,5 +6,6 @@ app_name = "payment"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("add", views.add, name="add")
+    path("add_payment", views.add, name="add"),
+    path("delete_payment", views.delete, name="delete")
 ]

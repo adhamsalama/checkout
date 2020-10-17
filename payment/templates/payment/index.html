@@ -1,16 +1,19 @@
 {% extends 'checkout/layout.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block body %}
 
-<form action="{% url 'payment:add' %}" method="POST">
+<form action="{% url 'payment:add' %}" method="POST" id="payment_form">
     {% csrf_token %}
     {{ form|crispy }}
     <button type="submit" class="btn btn-primary mt-2 mb-2">Add</button>
 </form>
 
+<h2>${{ payments_sum }}</h2>
+<div id="payments_list">
 {% for payment in payments %}
-    <div class="card mb-2">
+    <div class="card mb-2 item_div" id="{{ payment.id }}">
       <div class="card-body">
         <h2 class="card-title">${{ payment.value }}</h2>
         <p class="card-text">
@@ -18,9 +21,44 @@
         <br>
         Date: {{ payment.date }}
         </p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <a href="#" class="btn btn-danger payment_delete_button">Delete</a>
       </div>
     </div>
 {% endfor %}
+</div>
 
+{% if page_obj %}
+    <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+    {% endif %}
+    {% for num in paginator.page_range %}
+        {% if num == page_obj.number %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Next</a></li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+    {% endif %}
+  </ul>
+    </nav>
+{% else %}
+    <h1>No payments.</h1>
+{% endif %}
 {% endblock body %}
+
+{% block script %}
+<script src="{% static 'payment/add_payment.js' %}"></script>
+<script src="{% static 'payment/delete_payment.js' %}"></script>
+{% endblock script %}
