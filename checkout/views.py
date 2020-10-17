@@ -39,7 +39,6 @@ def create_item(request):
 
     data = json.loads(request.body)
     form = ItemForm(data)
-    print(data)
     if form.is_valid():
         category = data["category"]
         if not category:
@@ -86,13 +85,6 @@ def edit_item(request, item_id):
         request.user.save()
         return JsonResponse({"message": "Item updated"}, status=201)
     
-def view_item(request, item_id):
-    try:
-        item = Item.objects.get(id=item_id, user=request.user)
-    except:
-        return error(request, "Item not found")
-    return render(request, "checkout/item.html", {"item": item})
-
 
 def delete_item(request):
     item_id = json.loads(request.body)["item_id"]
@@ -116,7 +108,9 @@ def profile(request):
 
 
 def search(request):
-    q = request.GET["q"]
+    q = request.GET.get("q", None)
+    if q is None:
+        return error(request, "Query not provided")
     try:
         category = Category.objects.get(name=q.lower())
     except:
