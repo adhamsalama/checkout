@@ -1,0 +1,32 @@
+textarea {
+    height: 100px !important;
+}
+
+@keyframes delete {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+.item_div {
+    animation-name: delete;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+.list-group {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr);
+}
+  
+.list-group-item {
+  padding: 1em;
+  text-align: center;
+}
+
+.card-text {
+    font-size: larger !important;
+}
