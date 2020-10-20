@@ -210,6 +210,6 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("checkout:index"))
     else:
         return render(request, "checkout/register.html")
