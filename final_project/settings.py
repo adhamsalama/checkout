@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['checkout-finance.herokuapp.com']
 
+LOGIN_URL = 'checkout:login'
+LOGIN_REDIRECT_URL = 'checkout:index'
+LOGOUT_REDIRECT_URL = 'checkout:logout'
 
 # Application definition
 
