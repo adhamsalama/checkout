@@ -23,3 +23,5 @@ urlpatterns = [
     path("wishlist/", include("wishlist.urls", namespace="wishlist")),
     path("payments/", include("payment.urls", namespace="payment"))
 ]
+
+handler404 = 'checkout.views.error404'

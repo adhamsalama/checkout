@@ -213,3 +213,6 @@ def register(request):
         return HttpResponseRedirect(reverse("checkout:index"))
     else:
         return render(request, "checkout/register.html")
+
+def error404(request, exception):
+    return error(request, "Error 404. Page not found.")
