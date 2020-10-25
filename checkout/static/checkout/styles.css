@@ -30,3 +30,7 @@ textarea {
 .card-text {
     font-size: larger !important;
 }
+
+.form-control {
+    width: auto !important;
+}
