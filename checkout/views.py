@@ -117,16 +117,16 @@ def search(request):
         return error(request, "Query not provided")
     try:
         q = q.lower()
-        category = Category.objects.get(name=q)
+        category = Category.objects.get(name__icontains=q)
     except:
         category = None
-    results = request.user.items.filter(Q(name__contains=q)
-                                |Q(price__contains=q)
-                                |Q(quantity__contains=q)
-                                |Q(seller__contains=q)
+    results = request.user.items.filter(Q(name__icontains=q)
+                                |Q(price__icontains=q)
+                                |Q(quantity__icontains=q)
+                                |Q(seller__icontains=q)
                                 |Q(category=category)
-                                |Q(comment__contains=q)
-                                |Q(date__contains=q)).order_by("-date")
+                                |Q(comment__icontains=q)
+                                |Q(date__icontains=q)).order_by("-date")
     num = request.GET.get("page", 1)
     items_paginator = paginate(results, num)
     return render(request, "checkout/paginator.html", 
