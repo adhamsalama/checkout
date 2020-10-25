@@ -116,7 +116,8 @@ def search(request):
     if q is None:
         return error(request, "Query not provided")
     try:
-        category = Category.objects.get(name=q.lower())
+        q = q.lower()
+        category = Category.objects.get(name=q)
     except:
         category = None
     results = request.user.items.filter(Q(name__contains=q)
