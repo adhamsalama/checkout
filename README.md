@@ -150,10 +150,13 @@ Visualizes user data.
 		-  Sends a request to the server to delete wishlist item and removes it from the page without reloading the page.
 
 ## Staticfiles
- A directory of collected static files of the project. (Required even if empty for Heroku deployment to work)
+A directory of collected static files of the project. (Required even if empty for Heroku deployment to work)
 
 ## Requirements.txt
-- A list of required Python packages to run the project.
+A list of required Python packages to run the project.
 
 ## Procfile
-  - For deploying the app on Heroku.
+For deploying the app on Heroku.
+ 
+## .gitignore
+For git to ignore python cached files. 
