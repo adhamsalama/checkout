@@ -111,8 +111,7 @@ def profile(request):
     return render(request, "checkout/profile.html")
 
 @login_required
-def search(request):
-    q = request.GET.get("q", None)
+def search_page(request, q):
     if q is None:
         return error(request, "Query not provided")
     try:
@@ -134,6 +133,11 @@ def search(request):
                 "page_obj": items_paginator["page_obj"],
                 "items": items_paginator["items"]})
 
+@login_required
+def search(request):
+    q = request.GET.get("q", None)
+    return HttpResponseRedirect(reverse('checkout:search_page',kwargs={'q': q}))   
+ 
 @login_required
 def category(request, name):
     try:
