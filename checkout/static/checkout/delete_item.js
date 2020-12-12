@@ -1,11 +1,15 @@
-document.addEventListener("DOMContentLoaded", delete_click());
+//document.addEventListener("DOMContentLoaded", delete_click);
+//document.querySelectorAll(".delete_button").onclick = delete_click;
+let buttons = document.querySelectorAll(".delete_button");
+for(let i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = delete_click;
+}
 function delete_click () {
 
-        let buttons = document.querySelectorAll(".delete_button");
+        
         //console.log(forms.parentElement);
-        for (let i = 0; i < buttons.length; i++) {
-            let item = buttons[i].parentElement.parentElement;
-            buttons[i].onclick = function() {
+            let item = this.parentElement.parentElement;
+
                 const request = new Request("/delete_item",
                           {headers: {'X-CSRFToken': getCookie("csrftoken")}}
                       );
@@ -18,11 +22,15 @@ function delete_click () {
                 .then(response => response.json())
                 .then(result => {
                     console.log(result);
+                    // edited this to work on darshboard where balance isn't shown
                     let balance = document.querySelector("#balance");
-                    let pr = item.querySelector(".item_price").innerHTML;
-                    let new_balance = parseFloat(balance.innerHTML.slice(10, )) + parseFloat(pr);
-                    console.log(new_balance, new_balance.toFixed(1));
-                    balance.innerHTML = "Balance: $" + new_balance.toFixed(1); 
+                    
+                    if (balance) {
+                        let pr = item.querySelector(".item_price").innerHTML;
+                        let new_balance = parseFloat(balance.innerHTML.slice(10, )) + parseFloat(pr);
+                        console.log(new_balance, new_balance.toFixed(1));
+                        balance.innerHTML = "Balance: $" + new_balance.toFixed(1); 
+                    }
                     //item.remove();
                     return false;
                 })
@@ -30,6 +38,6 @@ function delete_click () {
                 item.onanimationend = () => {
                     item.remove();
                 }
-            }
-        }
+            
+        
 }

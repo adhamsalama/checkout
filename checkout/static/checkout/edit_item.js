@@ -1,16 +1,16 @@
-document.addEventListener("DOMContentLoaded", edit_click());
-
+//document.addEventListener("DOMContentLoaded", edit_click);
+let e = document.querySelectorAll(".edit_button");
+for(let i = 0; i < e.length; i++) {
+    e[i].onclick = edit_click;
+}
 function edit_click () {
     {
-        let buttons = document.querySelectorAll(".edit_button");
         //console.log(forms.parentElement);
-        for (let i = 0; i < buttons.length; i++) {
-            let item = buttons[i].parentElement.parentElement;
-            //console.log(item.id);
+            let item = this.parentElement.parentElement;
+            console.log(item.id);
             let props = item.querySelectorAll(".item");
             //console.log(props);
             //console.log("-----------------------");
-            buttons[i].onclick = function() {
                 const request = new Request("/edit_item/" + item.id,
                     {headers: {'X-CSRFToken': getCookie("csrftoken")}}
                 );
@@ -18,6 +18,7 @@ function edit_click () {
                 .then(response => response.text())
                 .then(result => {
                     // Print result
+                    console.log(item.id);
                     let item_copy = item.cloneNode(true);
                     console.log(item_copy);
                     item.innerHTML = result;
@@ -30,7 +31,8 @@ function edit_click () {
                         for(let j = 0; j < props.length; j++) {
                             let a = item.querySelector("#id_" + props[j]);
                             data.append(props[j], a.value);
-                            item_copy.querySelector(".item_" + props[j]).innerHTML = a.value;
+                            if (item_copy.querySelector(".item_" + props[j]))
+                                item_copy.querySelector(".item_" + props[j]).innerHTML = a.value;
                         }
                         console.log(data);
                         
@@ -51,8 +53,8 @@ function edit_click () {
                       
                     }
                 });
-            }
-        }
+            
+        
     }
 }
 
