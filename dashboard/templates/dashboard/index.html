@@ -13,21 +13,73 @@
     <br>
     If there is no green bar then the date you chose has the highest value.
     </p>
-    <img src="{{ images.month_img }}" class="img-fluid mt-2" id="month_img">
-    <img src="{{ images.year_img }}" class="img-fluid mb-2" id="year_img">
-
+    <img src="" class="img-fluid mt-2" id="month_img">
+    <img src="" class="img-fluid mb-2" id="year_img">
+    <div id="info"></div>
+    <div id="items_list"></div>
 {% endblock %}
 
 {% block script %}
     <script>
         let date = document.querySelector("#date");
-        date.onchange = function() {
+        show_data(date.value);
+        date.onchange = show_data;
+        function show_data() {
             fetch(`/dashboard/get_data?date=${date.value}`)
             .then(response => response.json())
             .then(result => {
                 document.querySelector("#month_img").src = result["month_img"];
                 document.querySelector("#year_img").src = result["year_img"];
+                let items = result["items"];
+                let items_list = document.querySelector("#items_list");
+                let html = "";
+                let count = 0;
+                for(let i = 0; i < items.length; i++) {
+                    html += `
+                            <div class="card mt-4 mb-4 item_div" id="${items[i].id}">
+                              <div class="card-body">
+                                <h2 class="card-title"><span class="item item_name">${items[i].name}</span></h2>
+                                <p class="card-text p-4">
+                                Price: $<span class="item item_price">${items[i].price}</span>
+                                <br>
+                                Quantity: <span class="item item_quantity">${items[i].quantity}</span>
+                                <br>
+                                Seller: <span class="item item_seller">${items[i].seller}</span>
+                                <br>
+                                </p>
+                                <button type="submit" class="btn btn-primary edit_button">Edit</button>
+                                <button type="submit" class="btn btn-danger delete_button">Delete</button>
+                              </div>
+                            </div>
+                    `
+                    count += parseFloat(items[i].price);
+                }
+                if (items.length > 0 ) {
+                document.querySelector("#info").innerHTML = `
+                    <div class="alert alert-primary" role="alert">
+                      Most expensive item: $${items[0].price}
+                      <br>
+                      Cheapest item: $${items[items.length-1].price}
+                      <br>
+                      Average item price: $${count / items.length}
+                      <br>
+                      Number of items: ${items.length}
+                      <br>
+                      Total cost: $${count}
+                    </div>
+                    `
+                items_list.innerHTML = html;
+                items = document.querySelector("#items_list").children;
+                    //console.log(b.length);
+                for(let i = 0; i < items.length; i++) {
+                    items[i].querySelector(".edit_button").onclick = edit_click;
+                    items[i].querySelector(".delete_button").onclick = delete_click;
+                }
+                }
+                
             })
+            
+                        
         }
     </script>
 {% endblock script %}

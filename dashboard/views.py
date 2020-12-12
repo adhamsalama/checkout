@@ -13,9 +13,8 @@ from .utils import plot_barchart, dict_max_value_index
 def index(request):
     if request.method == "GET":
         # get data for current month and year and show it by default
-        data = get_data(request)
-        images = json.loads(data.content)
-        return render(request, "dashboard/index.html", {"images": images, "today": datetime.now().strftime("%Y-%m-%d")})
+        data = json.loads(get_data(request).content)
+        return render(request, "dashboard/index.html", {"data": data, "today": datetime.now().strftime("%Y-%m-%d")})
 
 def get_data(request):
     try:
@@ -29,23 +28,32 @@ def get_data(request):
         month = date_obj.month
         year = date_obj.year
         day = date_obj.day
-    items = request.user.items.filter(date__year=year).order_by("-date")
+    items = request.user.items.filter(date__year=year).order_by("-price")
+    print(items)
     days = {}
     # "0": 0 is to make Jan on line value 1 instead of 0
     months = {"0": 0, "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0}
     # fill days dictionary keys with 0 to 31 and all values with 0 
     for i in range(0, 32):
         days[i] = 0
-    
+    day_items = []
     for item in items:
         if item.date.strftime("%m") == date_obj.strftime("%m"):
             day = int(item.date.strftime("%d"))
             days[day] += item.price
+        #print(type(item.date), date_obj.strftime("%Y-%m-%d"), item.date == date_obj.strftime("%Y-%m-%d"))
+        if item.date.strftime("%m-%d") == date_obj.strftime("%m-%d"):
+            day_items.append({"id": item.id,
+                            "name": item.name,
+                            "price": item.price,
+                            "quantity": item.quantity,
+                            "seller": item.seller,
+                            "date": item.date,
+                            "comment": item.comment})
         month = item.date.strftime("%b")
         months[month] += item.price
     max_days = dict_max_value_index(days)
     max_month = dict_max_value_index(months)
-
     month_img = plot_barchart(days,
                         title=f"Money spent in {date_obj.strftime('%B')} for year {year}",
                         xlabel="Day",
@@ -60,5 +68,5 @@ def get_data(request):
                         xmin=1,
                         highlight=date_obj.month,
                         highest_value=max_month)
-    return JsonResponse({"month_img": month_img, "year_img": year_img})
+    return JsonResponse({"month_img": month_img, "year_img": year_img, "items": day_items})
 
