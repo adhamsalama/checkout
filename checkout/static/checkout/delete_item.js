@@ -1,9 +1,10 @@
-//document.addEventListener("DOMContentLoaded", delete_click);
-//document.querySelectorAll(".delete_button").onclick = delete_click;
-let buttons = document.querySelectorAll(".delete_button");
-for(let i = 0; i < buttons.length; i++) {
-    buttons[i].onclick = delete_click;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    let buttons = document.querySelectorAll(".delete_button");
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = delete_click;
+    }
+});
+
 function delete_click () {
 
         
